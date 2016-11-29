@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/touch.js"></script>
+    <!--<script src="js/zepto.min.js"></script>-->
+</head>
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    /*.box{*/
+        /*width: 200px;*/
+        /*height:200px;*/
+        /*border: 1px solid black;*/
+    /*}*/
+    .wheel{
+        width: 100%;
+        height:200px;
+        border: 1px solid black;
+        overflow: hidden;
+    }
+    .box{
+        width:300%;
+        height:200px;
+        /*border:1px solid black;*/
+    }
+    .box a{
+        display: block;
+        float: left;
+        width: 33.333333333333333%;
+        height:200px;
+        text-align: center;
+        line-height: 200px;
+        font-size: 50px;
+        color: #fff;
+    }
+    .box a:nth-child(1){
+          background: plum;
+      }
+    .box a:nth-child(2){
+        background: yellow;
+    }
+    .box a:nth-child(3){
+        background: pink;
+    }
+
+
+</style>
+<script>
+//    $(function(){
+        /*轻击*/
+//        touch.on("body","tap",".box",function(){
+//            $(this).css({
+//                background:"red"
+//            })
+//        })
+        /*旋转*/
+//        touch.on("body","touchstart",".box",function(e){
+//            e.startRotate();
+//        })
+//        touch.on("body","rotate",".box",function(e){
+//            $(this).css({
+//                transform:"rotate("+e.rotation+"deg)"
+//            })
+//        })
+//    })
+    $(function(){
+        var marginL;
+        var num=0;
+        var width=$(window).width();
+        touch.on("body","dragstart",".box",function(e){
+            e.preventDefault();
+            $(".box").css({
+                transition:"none"
+            })
+            marginL=parseInt($(".box").css("marginLeft")?parseInt($(".box").css("marginLeft")):0)
+            console.log(marginL)
+        })
+
+        touch.on("body","drag",".box",function(e){
+            e.preventDefault();
+            $(".box").css({
+                marginLeft:marginL+e.x
+            })
+        })
+        touch.on("body","dragend",".box",function(e){
+            e.preventDefault();
+            if(Math.abs(e.x)>100){
+                console.log(e.direction)
+                if(e.direction=="left"){
+                    num++;
+                    if(num==$(".box a").length){
+                        num=$(".box a").length-1;
+                    }
+                    $(".box").css({
+                        marginLeft:-num*width,
+
+                    })
+                    console.log(num,width,-num*width)
+                }else if(e.direction=="right"){
+                    num--;
+                    if(num==-1){
+                        num=0;
+                    }
+                    $(".box").css({
+                        marginLeft:-num*width,
+                    })
+                }
+            }else{
+                $(".box").css({
+                    marginLeft:-num*width,
+                    transition:"margin 1s ease"
+                })
+            }
+        })
+    })
+</script>
+<body>
+<div class="wheel">
+    <div class="box">
+        <a href="#">1</a><a href="#">2</a><a href="#">3</a>
+    </div>
+</div>
+
+<!--<div class="box"></div>-->
+<!--<div class="box"></div>-->
+</body>
+</html>
